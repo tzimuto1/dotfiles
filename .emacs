@@ -1,0 +1,1 @@
+/home/tzimuto1/.emacs
