@@ -8,3 +8,6 @@
 (show-paren-mode 1)
 ;; indent upon clicking the return key
 (global-set-key "\C-m" 'newline-and-indent)
+;; prevent closing of emacs after accidentally typing C-z
+(global-unset-key (kbd "C-z"))
+
