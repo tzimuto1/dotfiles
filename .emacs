@@ -10,4 +10,8 @@
 (global-set-key "\C-m" 'newline-and-indent)
 ;; prevent closing of emacs after accidentally typing C-z
 (global-unset-key (kbd "C-z"))
-
+;; don't make backup copies of files
+(setq make-backup-files nil)
+;; enable remembering of the recently closed files. Very important when I acciendentally close emacs [like I did a while ago
+(require 'recentf)
+(recentf-mode 1)
