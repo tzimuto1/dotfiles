@@ -15,3 +15,5 @@
 ;; enable remembering of the recently closed files. Very important when I acciendentally close emacs [like I did a while ago
 (require 'recentf)
 (recentf-mode 1)
+;; to keep ssh alive
+(display-time-mode 1) 
