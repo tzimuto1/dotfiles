@@ -28,3 +28,6 @@
 
 ;; change font color of minibuffer
 ;;(set-face-foreground 'minibuffer-prompt "white")
+
+;; make indentation have width of four for C-mode
+(setq c-basic-offset 4)
