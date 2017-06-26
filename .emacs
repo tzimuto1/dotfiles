@@ -31,3 +31,6 @@
 
 ;; make indentation have width of four for C-mode
 (setq c-basic-offset 4)
+
+;; indent case labels
+(c-set-offset 'case-label '+)
