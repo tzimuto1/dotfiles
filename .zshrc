@@ -19,8 +19,8 @@ export TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S'
 # export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
 # For compilers to find openjdk@11 you may need to set:
 # export CPPFLAGS="-I/usr/local/opt/openjdk@11/include"
-export PATH="$HOME/.jenv/bin:$PATH"
-eval "$(jenv init -)"
+# export PATH="$HOME/.jenv/bin:$PATH"
+# eval "$(jenv init -)"
 
 ###############################################################################
 # PYTHON 
@@ -216,8 +216,10 @@ cdenv() {
         return 1
     fi
 
-    cdsrc
     export PROJECTROOT=$_WORKDIR
+    export PROJECTSROOT=$_PROJECTS_DIR
+    export PROJECT_TYPE=$_PROJECT_TYPE
+    cdsrc
 }
 
 cdroot() {
@@ -280,4 +282,12 @@ tea() {
     while IFS= read -r line; do
         echo "$line" | tee -a "$OUTPUTFILE"
     done
+}
+
+build() {
+    if [[ $PROJECT_TYPE == "proja" ]]; then
+    elif [[ $PROJECT_TYPE == "projb" ]]; then
+    else
+        echo "No known project type. Current: ${PROJECT_TYPE}"
+    fi
 }
