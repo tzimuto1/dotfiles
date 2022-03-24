@@ -117,6 +117,25 @@ gsave-unstagged() {
 }
 
 ###############################################################################
+# UTILS
+
+sql-to-java() {
+    _SQL_STRING=$1
+    if [[ -z ${_SQL_STRING} ]]; then
+        echo "No SQL string"
+        return 1
+    fi
+
+    result=`python -  <<END
+sql_string="""${_SQL_STRING}"""
+java_string="\n".join('+ "' + line + '"'  for line in sql_string.split("\n"))
+print java_string.lstrip("+")
+END`
+    echo ${result}
+    echo ${result} | pbcopy
+}
+
+###############################################################################
 # WORKSPACE DATA STRUCTURES
 
 export WORKDIR="${HOME}/workspace"
