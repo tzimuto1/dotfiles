@@ -112,6 +112,10 @@ bn() {
     _OLD_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
     echo "${_OLD_BRANCH} -> ${_NEW_BRANCH}" >> .branches
 }
+branched-from() {
+    _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
+    grep -E "\-> ${_CURRENT_BRANCH}" .branches --color=never
+}
 alias gwitchto=gswitchto
 alias B=b
 alias d="git diff"
