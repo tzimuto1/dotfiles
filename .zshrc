@@ -96,6 +96,22 @@ b() {
         gswitchto $_BRANCH_ID
     fi
 }
+bn() {
+    _NEW_BRANCH=$1
+    if [[ -z $_NEW_BRANCH ]]; then
+        echo "No branch provided"
+        return 1
+    fi
+
+    git checkout -b ${_NEW_BRANCH}
+    if [[ $? != 0 ]]; then
+        echo "Error creating a new branch"
+        return 1
+    fi
+
+    _OLD_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
+    echo "${_OLD_BRANCH} -> ${_NEW_BRANCH}" >> .branches
+}
 alias gwitchto=gswitchto
 alias B=b
 alias d="git diff"
