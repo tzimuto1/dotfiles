@@ -112,9 +112,13 @@ bn() {
     _OLD_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
     echo "${_OLD_BRANCH} -> ${_NEW_BRANCH}" >> .branches
 }
-branched-from() {
+parent-branch() {
     _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
-    grep -E "\-> ${_CURRENT_BRANCH}" .branches --color=never
+    grep -E "\-> ${_CURRENT_BRANCH}" .branches | grep -E "[a-zA-Z0-9_/-]+ \->" --color=always
+}
+child-branches() {
+    _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
+    grep -E "${_CURRENT_BRANCH} \->" .branches | grep -E "\-> [a-zA-Z0-9_/-]+" --color=always
 }
 alias gwitchto=gswitchto
 alias B=b
