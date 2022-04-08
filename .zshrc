@@ -120,6 +120,42 @@ child-branches() {
     _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
     grep -E "${_CURRENT_BRANCH} \->" .branches | grep -E "\-> [a-zA-Z0-9_/-]+" --color=always
 }
+move2child-branch() {
+    _CHILD_ID=$1
+    if [[ -z $_CHILD_ID ]]; then
+        echo "No child ID provided"
+        return 1
+    fi
+
+    _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
+    _CHILD_BRANCH=`grep -E "${_CURRENT_BRANCH} \->" .branches \
+        | grep -E "\->" --line-number \
+        | grep "${_CHILD_ID}:" \
+        | grep -E "\-> [a-zA-Z0-9_/-]+" -o \
+        | grep -E "[a-zA-Z][a-zA-Z0-9_/-]+" -o`
+
+    if [[ -z ${_CHILD_BRANCH} ]]; then
+        echo "No child branch found"
+        return 1
+    fi
+
+    git checkout ${_CHILD_BRANCH}
+}
+alias m2c=move2child-branch
+move2parent-branch() {
+    _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
+    _PARENT_BRANCH=`grep -E "\-> ${_CURRENT_BRANCH}" .branches \
+        | grep -E "[a-zA-Z0-9_/-]+ \->" -o \
+        | sed 's/ ->//g'`
+
+    if [[ -z ${_PARENT_BRANCH} ]]; then
+        echo "No parent branch found"
+        return 1
+    fi
+
+    git checkout ${_PARENT_BRANCH}
+}
+alias m2p=move2parent-branch
 alias gwitchto=gswitchto
 alias B=b
 alias d="git diff"
