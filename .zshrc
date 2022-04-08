@@ -74,6 +74,14 @@ tgbranch() {
     done
 
 }
+tgbranch_no_color() {
+    linenum=1
+    git branch --color=never | while read line; do
+        echo "$linenum : $line"
+        linenum=$((linenum + 1))
+    done
+
+}
 gswitchto() {
     _BRANCH_ID=$1
     if [[ -z $_BRANCH_ID ]]; then
@@ -81,8 +89,8 @@ gswitchto() {
         return 1
     fi
 
-    _BRANCH_NAME=`tgbranch \
-        | grep -E "${_BRANCH_ID} : \** *(.*)" -o \
+    _BRANCH_NAME=`tgbranch_no_color \
+        | grep -E "^${_BRANCH_ID} : \** *(.*)" -o \
         | sed "s/${_BRANCH_ID} : \* //g; s/${_BRANCH_ID} : //g;" \
         | grep -E "[a-zA-Z][a-zA-Z0-9/_-]+" -o || ${_BRANCH_ID}`
 
