@@ -82,6 +82,19 @@ tgbranch_no_color() {
     done
 
 }
+tgbranch_of_id() {
+    _BRANCH_ID=$1
+    if [[ -z $_BRANCH_ID ]]; then
+        echo "Branch ID not provided"
+        return 1
+    fi
+
+    _BRANCH_NAME=`tgbranch_no_color \
+        | grep -E "^${_BRANCH_ID} : \** *(.*)" -o \
+        | sed "s/${_BRANCH_ID} : \* //g; s/${_BRANCH_ID} : //g;" \
+        | grep -E "[a-zA-Z][a-zA-Z0-9/_-]+" -o || ${_BRANCH_ID}`
+    echo ${_BRANCH_NAME}
+}
 gswitchto() {
     _BRANCH_ID=$1
     if [[ -z $_BRANCH_ID ]]; then
@@ -104,6 +117,7 @@ b() {
         gswitchto $_BRANCH_ID
     fi
 }
+# branch new
 bn() {
     _NEW_BRANCH=$1
     if [[ -z $_NEW_BRANCH ]]; then
@@ -119,6 +133,36 @@ bn() {
 
     _OLD_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
     echo "${_OLD_BRANCH} -> ${_NEW_BRANCH}" >> .branches
+}
+# branch merge
+bm() {
+    _BRANCH=`tgbranch_of_id $1`
+    if [[ -z $_BRANCH ]]; then
+        echo "Branch not found"
+        return 1
+    fi
+    _PARENT_BRANCH=`grep -E "\-> ${_BRANCH}" .branches \
+        | grep -E "[a-zA-Z0-9_/-]+ \->" -o \
+        | sed 's/ ->//g'`
+    if [[ -z $_PARENT_BRANCH ]]; then
+        echo "Parent branch of ${_BRANCH} not found"
+        return 1
+    fi
+    echo "Parent branch ${_PARENT_BRANCH}, child branch ${_BRANCH}"
+    cat .branches > .branches.copy
+    cat .branches > .branches.new
+    # remove parent to branch link
+    sed -i "" "s/${_PARENT_BRANCH} -> ${_BRANCH}//g" .branches.new
+    # remove blank lines
+    sed -i "" '/^$/d' .branches.new
+    # update branch to children links
+    sed -i "" "s/${_BRANCH} ->/${_PARENT_BRANCH} ->/g" .branches.new
+    # update the files
+    mv .branches.new .branches
+    echo "===NEW==="
+    cat .branches
+    echo "===OLD==="
+    cat .branches.copy
 }
 parent-branch() {
     _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
