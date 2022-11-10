@@ -163,6 +163,8 @@ bm() {
     cat .branches
     echo "===OLD==="
     cat .branches.copy
+    echo "===DIFF==="
+    diff .branches.copy .branches
 }
 parent-branch() {
     _CURRENT_BRANCH=`git branch | grep -E "\* " | sed 's/* //g'`
